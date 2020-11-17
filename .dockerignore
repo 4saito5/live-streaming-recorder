@@ -1,0 +1,7 @@
+.bk
+.tmp
+data
+node_modules
+.next
+out
+build

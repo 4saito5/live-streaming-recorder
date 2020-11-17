@@ -1,0 +1,28 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type CheckList {
+  id: Int!
+  Group: String!
+  Name: String!
+  Site: String!
+  URL: String!
+  IsRecord: Int!
+}
+
+type Query {
+  checklists: [CheckList!]!
+}
+
+input NewCheckList {
+  Group: String!
+  Name: String!
+  Site: String!
+  URL: String!
+  IsRecord: Int!
+}
+
+type Mutation {
+  CreateCheckList(input: NewCheckList!): CheckList!
+}

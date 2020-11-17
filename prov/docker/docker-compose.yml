@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+
+  # フロントエンド開発用コンテナ
+  # http://localhost:3000/
+  next:
+    container_name: next
+    image: next
+    build:
+      # コンテキストをリポジトリのルートディレクトリに指定
+      context: ../../
+      dockerfile: ./prov/docker/next/Dockerfile
+    # # 初回用：パッケージインストール＆開発用Webサーバー起動
+    # # command: ash -c "yarn install && yarn dev"
+    # ２回目以降：開発用Webサーバー起動
+    command: ash -c "yarn dev"
+    volumes:
+      - ../../src/front:/opt/app
+    ports:
+      - 3000:3000
+    tty: true
+
+  # バックエンドコンテナ
+  # http://localhost:5050/
+  gqlgen:
+    container_name: gqlgen
+    image: gqlgen
+    build:
+      # コンテキストをリポジトリのルートディレクトリに指定
+      context: ../../
+      dockerfile: ./prov/docker/gqlgen/Dockerfile
+    # command: ash -c "cd /go/live-streaming-recorder && go run server.go"
+    # command: ash -c "go run server.go"
+    environment:
+      - PORT=5050
+    volumes:
+      - ../../src/back:/go/live-streaming-recorder
+      - ../../src/data:/data
+    ports:
+      - 5050:5050
+    tty: true
+
+  # サーバーデーモンコンテナ
+  golang:
+    container_name: golang
+    image: golang
+    build:
+      # コンテキストをリポジトリのルートディレクトリに指定
+      context: ../../
+      dockerfile: ./prov/docker/golang/Dockerfile
+    # command: ash -c "go run server.go"
+    volumes:
+      - ../../src/srvd:/go/live-streaming-recorder
+      - ../../src/data:/data
+    tty: true
+
+  # sqlite-web
+  # http://localhost:7000/
+  sqlite-web:
+    container_name: sqlite-web
+    image: coleifer/sqlite-web
+    environment:
+      - SQLITE_DATABASE=sqlite.db
+    volumes:
+      # - ../../src/back/data:/data
+      - ../../src/data:/data
+    ports:
+      - 7000:8080
+    tty: true

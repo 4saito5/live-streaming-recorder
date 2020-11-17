@@ -1,0 +1,15 @@
+
+# Jetbrain Rider Cache
+.idea/
+Assets/Plugins/Editor/JetBrains*
+
+# Visual Studio Code
+.vscode/
+
+# debug
+.bk
+.tmp
+.env
+
+# Database file
+*.db
