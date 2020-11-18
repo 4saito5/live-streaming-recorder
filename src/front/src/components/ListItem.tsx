@@ -8,7 +8,7 @@ type Props = {
 
 const ListItem = ({ data }: Props) => (
     <a>
-      {data.id}: {data.Group}, {data.Name}, {data.Site}, {data.URL}, {data.IsRecord}
+      {data.id}: {data.Group}, {data.Name}, {data.Site}, {data.Key}, {data.URL}, {data.IsRecord}
     </a>
 )
 

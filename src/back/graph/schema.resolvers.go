@@ -11,17 +11,11 @@ import (
 )
 
 func (r *mutationResolver) CreateCheckList(ctx context.Context, input model.NewCheckList) (*model.CheckList, error) {
-	// panic(fmt.Errorf("not implemented"))
-
-	// isRecord := 0
-	// if input.IsRecord {
-	// 	isRecord := 1
-	// }
 	checkList := &model.CheckList{
-		// ID:     	fmt.Sprintf("T%d", rand.Int()),
 		Group:    input.Group,
 		Name:     input.Name,
 		Site:     input.Site,
+		Key:      input.Key,
 		URL:      input.URL,
 		IsRecord: input.IsRecord,
 	}
@@ -31,15 +25,11 @@ func (r *mutationResolver) CreateCheckList(ctx context.Context, input model.NewC
 		panic(result.Error)
 	}
 
-	// r.checklists = append(r.checklists, result.RowsAffected)
-	// return result.RowsAffected, nil
 	r.checklists = append(r.checklists, checkList)
 	return checkList, nil
 }
 
 func (r *queryResolver) Checklists(ctx context.Context) ([]*model.CheckList, error) {
-	// panic(fmt.Errorf("not implemented"))
-
 	r.DB.Find(&r.checklists)
 	return r.checklists, nil
 }

@@ -9,12 +9,10 @@ import Layout from '../components/Layout'
 import List from '../components/List'
 
 
-
 type Props = {
   items: CheckList[]
+  // url: string
 }
-
-// const WithStaticProps = ({ items }: Props) => (
 
 const IndexPage = ({ items }: Props) => (
 
@@ -29,14 +27,7 @@ export const getStaticProps: GetStaticProps = async () => {
   // the component.
 
   const items: CheckList[] = await getCheckListData()
-  // const items: CheckList[] = sampleCheckListData
-
-
   return { props: { items } }
-
-  // const data = await getData()
-  // return { props: { data } }
-
 }
 
 export default IndexPage

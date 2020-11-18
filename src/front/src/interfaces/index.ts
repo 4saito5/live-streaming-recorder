@@ -9,6 +9,7 @@ export type CheckList = {
   Group: string
   Name: string
   Site: string
+  Key: string
   URL: string
   IsRecord: number
 }

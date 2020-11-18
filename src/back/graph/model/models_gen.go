@@ -7,6 +7,7 @@ type CheckList struct {
 	Group    string `json:"Group"`
 	Name     string `json:"Name"`
 	Site     string `json:"Site"`
+	Key      string `json:"Key"`
 	URL      string `json:"URL"`
 	IsRecord int    `json:"IsRecord"`
 }
@@ -15,6 +16,7 @@ type NewCheckList struct {
 	Group    string `json:"Group"`
 	Name     string `json:"Name"`
 	Site     string `json:"Site"`
+	Key      string `json:"Key"`
 	URL      string `json:"URL"`
 	IsRecord int    `json:"IsRecord"`
 }

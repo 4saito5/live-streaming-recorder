@@ -19,6 +19,8 @@ services:
       - ../../src/front:/opt/app
     ports:
       - 3000:3000
+    links:
+      - gqlgen
     tty: true
 
   # バックエンドコンテナ
@@ -30,8 +32,7 @@ services:
       # コンテキストをリポジトリのルートディレクトリに指定
       context: ../../
       dockerfile: ./prov/docker/gqlgen/Dockerfile
-    # command: ash -c "cd /go/live-streaming-recorder && go run server.go"
-    # command: ash -c "go run server.go"
+    command: ash -c "go run server.go"
     environment:
       - PORT=5050
     volumes:
@@ -53,6 +54,8 @@ services:
     volumes:
       - ../../src/srvd:/go/live-streaming-recorder
       - ../../src/data:/data
+    links:
+      - gqlgen
     tty: true
 
   # sqlite-web
@@ -63,7 +66,6 @@ services:
     environment:
       - SQLITE_DATABASE=sqlite.db
     volumes:
-      # - ../../src/back/data:/data
       - ../../src/data:/data
     ports:
       - 7000:8080
