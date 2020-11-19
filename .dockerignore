@@ -1,7 +1,8 @@
-.bk
+*.bk*
 .tmp
-data
-node_modules
-.next
-out
-build
+download
+src/data
+src/front/node_modules
+src/front/.next
+src/front/out
+src/front/build

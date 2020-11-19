@@ -17,9 +17,14 @@ type Props = {
 //   url = value
 // }
 const addUrl = (url: string) => {
-  // console.log(url)
   createCheckListData(url)
 };
+
+const keyPress = (e: any) => {
+  if (e.which === 13) {
+    addUrl(e.target.value)
+  }
+}
 
 const Layout = ({ children, title = 'This is the default title', url }: Props) => (
   <div>
@@ -36,11 +41,11 @@ const Layout = ({ children, title = 'This is the default title', url }: Props) =
           name="url"
           onChange={e => {url = e.target.value}}
           value={url}
+          onKeyPress={(e) => keyPress(e)}
           style={{width:'80%'}}
         />
-        <button onClick={() => addUrl(url)}>Add</button>
+        <button onClick={() => addUrl(url!)}>Add</button>
       </div>
-
 
     </header>
     {children}

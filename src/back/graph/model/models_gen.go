@@ -10,6 +10,7 @@ type CheckList struct {
 	Key      string `json:"Key"`
 	URL      string `json:"URL"`
 	IsRecord int    `json:"IsRecord"`
+	OnLive   int    `json:"OnLive"`
 }
 
 type NewCheckList struct {
@@ -19,4 +20,5 @@ type NewCheckList struct {
 	Key      string `json:"Key"`
 	URL      string `json:"URL"`
 	IsRecord int    `json:"IsRecord"`
+	OnLive   int    `json:"OnLive"`
 }

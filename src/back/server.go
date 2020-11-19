@@ -121,22 +121,33 @@ func addShowroom(url string) {
 	// get name & growp
 	reg := regexp.MustCompile(`<title>(.*) - SHOWROOM`)
 	findString := reg.FindStringSubmatch(bodyString)
-	// fmt.Println(findString[1])
+	fmt.Println(findString[1])
 
-	reg = regexp.MustCompile(`^(.*)（`)
+	name := ""
+	growp := ""
+	reg = regexp.MustCompile(`^(.*)(（|\()`)
 	findString2 := reg.FindStringSubmatch(findString[1])
-	// fmt.Println(findString2[1])
-	name := findString2[1]
+	if len(findString2) >= 1 {
+		// グループが有るパターン
+		fmt.Println(findString2[1])
+		name = findString2[1]
 
-	reg = regexp.MustCompile(`（(.*)）`)
-	findString2 = reg.FindStringSubmatch(findString[1])
-	// fmt.Println(findString2[1])
-	growp := findString2[1]
+		reg = regexp.MustCompile(`(（|\()(.*)(）|\))`)
+		findString2 = reg.FindStringSubmatch(findString[1])
+		if len(findString2) >= 2 {
+			fmt.Println(findString2[2])
+			growp = findString2[2]
+		}
+	} else {
+		// グループが無いパターン
+		name = findString[1]
+		// growp := ""
+	}
 
 	// get room_id
 	reg = regexp.MustCompile(`room_id=(\d+)`)
 	findString = reg.FindStringSubmatch(bodyString)
-	// fmt.Println(findString[1])
+	fmt.Println(findString[1])
 	key := findString[1]
 
 	db, _ := gorm.Open(sqlite.Open("/data/sqlite.db"), &gorm.Config{})
@@ -149,6 +160,7 @@ func addShowroom(url string) {
 		Key:      key,
 		URL:      url,
 		IsRecord: 1,
+		OnLive: 	0,
 	}
 
 	result := db.Create(&checkList)

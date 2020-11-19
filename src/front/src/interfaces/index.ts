@@ -12,4 +12,5 @@ export type CheckList = {
   Key: string
   URL: string
   IsRecord: number
+  OnLive: number
 }

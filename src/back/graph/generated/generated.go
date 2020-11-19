@@ -49,6 +49,7 @@ type ComplexityRoot struct {
 		IsRecord func(childComplexity int) int
 		Key      func(childComplexity int) int
 		Name     func(childComplexity int) int
+		OnLive   func(childComplexity int) int
 		Site     func(childComplexity int) int
 		URL      func(childComplexity int) int
 	}
@@ -118,6 +119,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CheckList.Name(childComplexity), true
+
+	case "CheckList.OnLive":
+		if e.complexity.CheckList.OnLive == nil {
+			break
+		}
+
+		return e.complexity.CheckList.OnLive(childComplexity), true
 
 	case "CheckList.Site":
 		if e.complexity.CheckList.Site == nil {
@@ -228,6 +236,7 @@ type CheckList {
   Key: String!
   URL: String!
   IsRecord: Int!
+  OnLive: Int!
 }
 
 type Query {
@@ -241,6 +250,7 @@ input NewCheckList {
   Key: String!
   URL: String!
   IsRecord: Int!
+  OnLive: Int!
 }
 
 type Mutation {
@@ -551,6 +561,41 @@ func (ec *executionContext) _CheckList_IsRecord(ctx context.Context, field graph
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.IsRecord, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _CheckList_OnLive(ctx context.Context, field graphql.CollectedField, obj *model.CheckList) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CheckList",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OnLive, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1856,6 +1901,14 @@ func (ec *executionContext) unmarshalInputNewCheckList(ctx context.Context, obj 
 			if err != nil {
 				return it, err
 			}
+		case "OnLive":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("OnLive"))
+			it.OnLive, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -1913,6 +1966,11 @@ func (ec *executionContext) _CheckList(ctx context.Context, sel ast.SelectionSet
 			}
 		case "IsRecord":
 			out.Values[i] = ec._CheckList_IsRecord(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "OnLive":
+			out.Values[i] = ec._CheckList_OnLive(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

@@ -10,6 +10,7 @@ type CheckList {
   Key: String!
   URL: String!
   IsRecord: Int!
+  OnLive: Int!
 }
 
 type Query {
@@ -23,6 +24,7 @@ input NewCheckList {
   Key: String!
   URL: String!
   IsRecord: Int!
+  OnLive: Int!
 }
 
 type Mutation {

@@ -1,4 +1,3 @@
-
 # Jetbrain Rider Cache
 .idea/
 Assets/Plugins/Editor/JetBrains*
@@ -7,9 +6,12 @@ Assets/Plugins/Editor/JetBrains*
 .vscode/
 
 # debug
-.bk
+*.bk*
 .tmp
 .env
 
 # Database file
 *.db
+
+# Download file
+download

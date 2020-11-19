@@ -5,6 +5,12 @@ Live Streaming Recorder
 
 **Installing steps**
 
+Copy database
+
+```bash
+$ cp -pf src/data/sqlite.db.brank src/data/sqlite.db
+```
+
 Start Up docker container
 
 ```bash

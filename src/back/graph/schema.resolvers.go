@@ -18,6 +18,7 @@ func (r *mutationResolver) CreateCheckList(ctx context.Context, input model.NewC
 		Key:      input.Key,
 		URL:      input.URL,
 		IsRecord: input.IsRecord,
+		OnLive: 	input.OnLive,
 	}
 
 	result := r.DB.Create(&checkList)
