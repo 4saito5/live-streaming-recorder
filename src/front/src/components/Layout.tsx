@@ -35,16 +35,17 @@ const Layout = ({ children, title = 'This is the default title', url }: Props) =
     </Head>
     <header>
 
-      <div className="form">
-        <input className="url"
+      <div className="form items-center p-8">
+        <input className="border-2 px-2 py-1 rounded "
           type="text"
           name="url"
           onChange={e => {url = e.target.value}}
           value={url}
+          placeholder="https://www.showroom-live.com/xxxxx"
           onKeyPress={(e) => keyPress(e)}
           style={{width:'80%'}}
         />
-        <button onClick={() => addUrl(url!)}>Add</button>
+        <button className="border-2 px-2 py-1  rounded" onClick={() => addUrl(url!)}>Add</button>
       </div>
 
     </header>

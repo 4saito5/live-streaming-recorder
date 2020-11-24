@@ -1,0 +1,42 @@
+@tailwind base;
+
+/* Write your own custom base styles here */
+
+/* Start purging... */
+@tailwind components;
+/* Stop purging. */
+
+/* Write your own custom component styles here */
+/* .btn-blue {
+  @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+} */
+.cl-group {
+  display: inline-block;
+  width: 220px;
+}
+.cl-name {
+  display: inline-block;
+  width: 120px;
+}
+.cl-site {
+  display: inline-block;
+  width: 130px;
+}
+.cl-url {
+  display: inline-block;
+  width: 450px;
+}
+.cl-is-record {
+  display: inline-block;
+  width: 60px;
+}
+.cl-on-live {
+  display: inline-block;
+  width: 60px;
+}
+
+/* Start purging... */
+@tailwind utilities;
+/* Stop purging. */
+
+/* Your own custom utilities */
