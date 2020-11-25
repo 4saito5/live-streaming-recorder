@@ -66,7 +66,11 @@ func matchCheckList(db *gorm.DB, checklists *[]CheckList) {
 
 		// Check live streaming
 		url := "https://www.showroom-live.com/api/live/polling?room_id=" + checklist.Key
-		resp, _ := http.Get(url)
+		resp, err := http.Get(url)
+		if err != nil {
+			fmt.Println("Error: http.Get, ", checklist.Name, ", skip")
+			continue
+		}
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
 		bodyString := string(body)
