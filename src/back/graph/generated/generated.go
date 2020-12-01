@@ -55,16 +55,23 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateCheckList func(childComplexity int, input model.NewCheckList) int
+		CreateCheckList func(childComplexity int, input model.EditCheckList) int
+		DeleteCheckList func(childComplexity int, input model.DeleteCheckListKey) int
 	}
 
 	Query struct {
 		Checklists func(childComplexity int) int
 	}
+
+	Response struct {
+		Code    func(childComplexity int) int
+		Message func(childComplexity int) int
+	}
 }
 
 type MutationResolver interface {
-	CreateCheckList(ctx context.Context, input model.NewCheckList) (*model.CheckList, error)
+	CreateCheckList(ctx context.Context, input model.EditCheckList) (*model.CheckList, error)
+	DeleteCheckList(ctx context.Context, input model.DeleteCheckListKey) (*model.Response, error)
 }
 type QueryResolver interface {
 	Checklists(ctx context.Context) ([]*model.CheckList, error)
@@ -151,7 +158,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateCheckList(childComplexity, args["input"].(model.NewCheckList)), true
+		return e.complexity.Mutation.CreateCheckList(childComplexity, args["input"].(model.EditCheckList)), true
+
+	case "Mutation.DeleteCheckList":
+		if e.complexity.Mutation.DeleteCheckList == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteCheckList_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteCheckList(childComplexity, args["input"].(model.DeleteCheckListKey)), true
 
 	case "Query.checklists":
 		if e.complexity.Query.Checklists == nil {
@@ -159,6 +178,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Checklists(childComplexity), true
+
+	case "Response.Code":
+		if e.complexity.Response.Code == nil {
+			break
+		}
+
+		return e.complexity.Response.Code(childComplexity), true
+
+	case "Response.Message":
+		if e.complexity.Response.Message == nil {
+			break
+		}
+
+		return e.complexity.Response.Message(childComplexity), true
 
 	}
 	return 0, false
@@ -228,6 +261,11 @@ var sources = []*ast.Source{
 #
 # https://gqlgen.com/getting-started/
 
+type Response {
+  Code: Int!
+  Message: String!
+}
+
 type CheckList {
   id: Int!
   Group: String!
@@ -243,7 +281,7 @@ type Query {
   checklists: [CheckList!]!
 }
 
-input NewCheckList {
+input EditCheckList {
   Group: String!
   Name: String!
   Site: String!
@@ -253,8 +291,13 @@ input NewCheckList {
   OnLive: Int!
 }
 
+input DeleteCheckListKey {
+  id: Int!
+}
+
 type Mutation {
-  CreateCheckList(input: NewCheckList!): CheckList!
+  CreateCheckList(input: EditCheckList!): CheckList!
+  DeleteCheckList(input: DeleteCheckListKey!): Response!
 }
 `, BuiltIn: false},
 }
@@ -267,10 +310,25 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_CreateCheckList_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.NewCheckList
+	var arg0 model.EditCheckList
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewCheckList2githubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐNewCheckList(ctx, tmp)
+		arg0, err = ec.unmarshalNEditCheckList2githubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐEditCheckList(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_DeleteCheckList_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.DeleteCheckListKey
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteCheckListKey2githubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐDeleteCheckListKey(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -637,7 +695,7 @@ func (ec *executionContext) _Mutation_CreateCheckList(ctx context.Context, field
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateCheckList(rctx, args["input"].(model.NewCheckList))
+		return ec.resolvers.Mutation().CreateCheckList(rctx, args["input"].(model.EditCheckList))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -652,6 +710,48 @@ func (ec *executionContext) _Mutation_CreateCheckList(ctx context.Context, field
 	res := resTmp.(*model.CheckList)
 	fc.Result = res
 	return ec.marshalNCheckList2ᚖgithubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐCheckList(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_DeleteCheckList(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_DeleteCheckList_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteCheckList(rctx, args["input"].(model.DeleteCheckListKey))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖgithubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_checklists(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -758,6 +858,76 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Response_Code(ctx context.Context, field graphql.CollectedField, obj *model.Response) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Response",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Response_Message(ctx context.Context, field graphql.CollectedField, obj *model.Response) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Response",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -1847,8 +2017,28 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputNewCheckList(ctx context.Context, obj interface{}) (model.NewCheckList, error) {
-	var it model.NewCheckList
+func (ec *executionContext) unmarshalInputDeleteCheckListKey(ctx context.Context, obj interface{}) (model.DeleteCheckListKey, error) {
+	var it model.DeleteCheckListKey
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputEditCheckList(ctx context.Context, obj interface{}) (model.EditCheckList, error) {
+	var it model.EditCheckList
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -2005,6 +2195,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "DeleteCheckList":
+			out.Values[i] = ec._Mutation_DeleteCheckList(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2049,6 +2244,38 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var responseImplementors = []string{"Response"}
+
+func (ec *executionContext) _Response(ctx context.Context, sel ast.SelectionSet, obj *model.Response) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, responseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Response")
+		case "Code":
+			out.Values[i] = ec._Response_Code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "Message":
+			out.Values[i] = ec._Response_Message(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2371,6 +2598,16 @@ func (ec *executionContext) marshalNCheckList2ᚖgithubᚗcomᚋ4saito5ᚋlive�
 	return ec._CheckList(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNDeleteCheckListKey2githubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐDeleteCheckListKey(ctx context.Context, v interface{}) (model.DeleteCheckListKey, error) {
+	res, err := ec.unmarshalInputDeleteCheckListKey(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNEditCheckList2githubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐEditCheckList(ctx context.Context, v interface{}) (model.EditCheckList, error) {
+	res, err := ec.unmarshalInputEditCheckList(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
 	res, err := graphql.UnmarshalInt(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -2386,9 +2623,18 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNNewCheckList2githubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐNewCheckList(ctx context.Context, v interface{}) (model.NewCheckList, error) {
-	res, err := ec.unmarshalInputNewCheckList(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) marshalNResponse2githubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐResponse(ctx context.Context, sel ast.SelectionSet, v model.Response) graphql.Marshaler {
+	return ec._Response(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResponse2ᚖgithubᚗcomᚋ4saito5ᚋliveᚑstreamingᚑrecorderᚋgraphᚋmodelᚐResponse(ctx context.Context, sel ast.SelectionSet, v *model.Response) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Response(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

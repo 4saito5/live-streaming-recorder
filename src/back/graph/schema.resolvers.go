@@ -10,7 +10,7 @@ import (
 	"github.com/4saito5/live-streaming-recorder/graph/model"
 )
 
-func (r *mutationResolver) CreateCheckList(ctx context.Context, input model.NewCheckList) (*model.CheckList, error) {
+func (r *mutationResolver) CreateCheckList(ctx context.Context, input model.EditCheckList) (*model.CheckList, error) {
 	checkList := &model.CheckList{
 		Group:    input.Group,
 		Name:     input.Name,
@@ -18,16 +18,27 @@ func (r *mutationResolver) CreateCheckList(ctx context.Context, input model.NewC
 		Key:      input.Key,
 		URL:      input.URL,
 		IsRecord: input.IsRecord,
-		OnLive: 	input.OnLive,
+		OnLive:   input.OnLive,
 	}
 
 	result := r.DB.Create(&checkList)
 	if result.Error != nil {
 		panic(result.Error)
 	}
-
-	r.checklists = append(r.checklists, checkList)
 	return checkList, nil
+}
+
+func (r *mutationResolver) DeleteCheckList(ctx context.Context, input model.DeleteCheckListKey) (*model.Response, error) {
+	result := r.DB.Where("id = ?", input.ID).Delete(&model.CheckList{})
+	if result.Error != nil {
+		panic(result.Error)
+	}
+
+	response := &model.Response{
+		Code:    200,
+		Message: "success.",
+	}
+	return response, nil
 }
 
 func (r *queryResolver) Checklists(ctx context.Context) ([]*model.CheckList, error) {

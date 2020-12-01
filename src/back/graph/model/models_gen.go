@@ -13,7 +13,11 @@ type CheckList struct {
 	OnLive   int    `json:"OnLive"`
 }
 
-type NewCheckList struct {
+type DeleteCheckListKey struct {
+	ID int `json:"id"`
+}
+
+type EditCheckList struct {
 	Group    string `json:"Group"`
 	Name     string `json:"Name"`
 	Site     string `json:"Site"`
@@ -21,4 +25,9 @@ type NewCheckList struct {
 	URL      string `json:"URL"`
 	IsRecord int    `json:"IsRecord"`
 	OnLive   int    `json:"OnLive"`
+}
+
+type Response struct {
+	Code    int    `json:"Code"`
+	Message string `json:"Message"`
 }

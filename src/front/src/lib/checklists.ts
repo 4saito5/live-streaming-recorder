@@ -45,6 +45,36 @@ export async function createCheckListData(url: string) {
       'url': url
     }
   })
-  location.reload(false);
+  location.reload(false)
   // console.log(res)
+}
+
+export async function deleteCheckListData(id: number) {
+  try {
+    const query = JSON.stringify({"query":"mutation DeleteCheckList {\n\tDeleteCheckList(input:{id: " + id + "}) {\n\t\tCode\n\t\tMessage\n\t}\n}"})
+
+    const res = await axios(
+    {
+      url: 'http://localhost:5050/query',
+      method: 'POST',
+      headers: {
+        // 'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        // 'Connection': 'keep-alive',
+        // 'DNT': '1',
+        // 'Origin': 'http://gqlgen:5050'
+      },      
+      data: query
+    })
+    location.reload(false)
+    // console.log(res.data.data.DeleteCheckList.Code)
+    // console.log(res.data.data.DeleteCheckList.Message)
+    return true
+  } catch(e) {
+    console.error(e)
+  }
+  return false
+
+  
 }

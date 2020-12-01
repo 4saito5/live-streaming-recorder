@@ -10,6 +10,9 @@
 /* .btn-blue {
   @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
 } */
+.cl-id {
+  display:none;
+}
 .cl-group {
   display: inline-block;
   width: 220px;
@@ -34,7 +37,14 @@
   display: inline-block;
   width: 60px;
 }
-
+.cl-edit {
+  display: inline-block;
+  width: 50px;
+}
+.cl-delete {
+  display: inline-block;
+  width: 50px;
+}
 /* Start purging... */
 @tailwind utilities;
 /* Stop purging. */

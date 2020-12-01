@@ -2,6 +2,11 @@
 #
 # https://gqlgen.com/getting-started/
 
+type Response {
+  Code: Int!
+  Message: String!
+}
+
 type CheckList {
   id: Int!
   Group: String!
@@ -17,7 +22,7 @@ type Query {
   checklists: [CheckList!]!
 }
 
-input NewCheckList {
+input EditCheckList {
   Group: String!
   Name: String!
   Site: String!
@@ -27,6 +32,11 @@ input NewCheckList {
   OnLive: Int!
 }
 
+input DeleteCheckListKey {
+  id: Int!
+}
+
 type Mutation {
-  CreateCheckList(input: NewCheckList!): CheckList!
+  CreateCheckList(input: EditCheckList!): CheckList!
+  DeleteCheckList(input: DeleteCheckListKey!): Response!
 }
