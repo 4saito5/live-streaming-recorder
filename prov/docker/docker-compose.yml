@@ -16,7 +16,7 @@ services:
     # ２回目以降：開発用Webサーバー起動
     command: ash -c "yarn dev"
     volumes:
-      - ../../src/front:/opt/app
+      - ../../src/front:/opt/app:delegated
     ports:
       - 3000:3000
     links:
@@ -36,8 +36,8 @@ services:
     environment:
       - PORT=5050
     volumes:
-      - ../../src/back:/go/live-streaming-recorder
-      - ../../src/data:/data
+      - ../../src/back:/go/live-streaming-recorder:delegated
+      - ../../src/data:/data:delegated
     ports:
       - 5050:5050
     tty: true
@@ -52,9 +52,9 @@ services:
       dockerfile: ./prov/docker/golang/Dockerfile
     command: ash -c "go run server.go"
     volumes:
-      - ../../src/srvd:/go/live-streaming-recorder
-      - ../../src/data:/data
-      - ../../download:/download
+      - ../../src/srvd:/go/live-streaming-recorder:delegated
+      - ../../src/data:/data:delegated
+      - ../../download:/download:delegated
     links:
       - gqlgen
     tty: true
@@ -67,7 +67,7 @@ services:
   #   environment:
   #     - SQLITE_DATABASE=sqlite.db
   #   volumes:
-  #     - ../../src/data:/data
+  #     - ../../src/data:/data:delegated
   #   ports:
   #     - 7000:8080
   #   tty: true
