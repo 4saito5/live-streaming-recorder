@@ -39,7 +39,7 @@ export async function createCheckListData(url: string) {
   }
   const res = await axios(
   {
-    url: 'http://localhost:5050/add_url',
+    url: 'http://gqlgen/add_url',
     method: 'POST',
     data: {
       'url': url
@@ -55,7 +55,7 @@ export async function deleteCheckListData(id: number) {
 
     const res = await axios(
     {
-      url: 'http://localhost:5050/query',
+      url: 'http://gqlgen/query',
       method: 'POST',
       headers: {
         // 'Accept-Encoding': 'gzip, deflate, br',
@@ -64,7 +64,7 @@ export async function deleteCheckListData(id: number) {
         // 'Connection': 'keep-alive',
         // 'DNT': '1',
         // 'Origin': 'http://gqlgen:5050'
-      },      
+      },
       data: query
     })
     location.reload(false)
@@ -76,5 +76,5 @@ export async function deleteCheckListData(id: number) {
   }
   return false
 
-  
+
 }
