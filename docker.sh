@@ -18,7 +18,7 @@ unknown() { abort "unrecognized option '$1'"; }
 required() { [ $# -gt 1 ] || abort "option '$1' requires an argument"; }
 
 IS_LIMA=`which lima`
-echo ${IS_LIMA}
+# echo ${IS_LIMA}
 if ! echo "${IS_LIMA}" | grep -q "/lima"; then
   # echo "lima not found"
   DOCKER_COMPOSE="docker-compose"
